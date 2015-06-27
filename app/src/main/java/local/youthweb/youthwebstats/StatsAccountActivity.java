@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -23,25 +24,25 @@ import java.io.InputStreamReader;
 
 
 public class StatsAccountActivity extends Activity {
-    private TextView output = (TextView) findViewById(R.id.output);
+    private TextView output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_account);
-
+        output = (TextView) findViewById(R.id.output);
         // http request
-        String output = "";
+        String outputString = "";
         try {
             StringBuilder builder = getResponseBody();
             JSONObject jsonObject = parseJsonString(builder.toString());
             JSONObject data = (JSONObject) jsonObject.get("data");
             JSONObject attributes = (JSONObject) data.get("attributes");
-             output = (String) attributes.get("user_total");
+            outputString = (String) attributes.get("user_total");
         } catch (Exception e) {
-            output = e.getMessage();
+            outputString = e.getMessage();
         }
-        this.output.setText(output);
+        this.output.setText(outputString);
         // parse JSONObject(json-String)
         // JSONObject jsonObject = parseJsonString(builder.toString());
         // show get data.aAttributes.user_total

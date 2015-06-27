@@ -10,12 +10,13 @@ import android.widget.Button;
 
 
 public class MainActivity extends Activity {
-    final Button stats_account = (Button) findViewById(R.id.stats_account);
+    private Button stats_account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        stats_account = (Button) findViewById(R.id.stats_account);
 
         stats_account.setOnClickListener(new View.OnClickListener() {
             @Override
