@@ -1,0 +1,7 @@
+INDEX VERSION 1.127+/home/oliver/workspace/YouthwebStats/.metadata/.plugins/org.eclipse.jdt.core
+765453901.index
+653808927.index
+2301516142.index
+3099082119.index
+591603662.index
+3988760314.index
