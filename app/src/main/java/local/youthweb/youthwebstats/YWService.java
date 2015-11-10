@@ -22,7 +22,7 @@ public class YWService {
     private String stats;
     private String TAG = this.getClass().getName();
     private String url;
-    private String stting = "fail";
+    private String string = "fail";
 
 
     private HttpURLConnection conn = null;
@@ -72,8 +72,8 @@ public class YWService {
                         is = conn.getInputStream();
 
                         // Convert the InputStream into a string
-                        stting = readIt(is, 1000);
-                        Log.i(TAG, "received: " + stting);
+                        string = readIt(is, 1000);
+                        Log.i(TAG, "received: " + string);
                         // Makes sure that the InputStream is closed after the app is
                         // finished using it.
                     } catch (Exception e) {
@@ -95,7 +95,7 @@ public class YWService {
         });
 
         thread.start();
-        return stting;
+        return string;
     }
 
     private void createConnection() {
