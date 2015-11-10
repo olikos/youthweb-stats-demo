@@ -1,30 +1,100 @@
 package local.youthweb.youthwebstats;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MainActivity extends Activity {
-    private Button stats_account;
+    private Spinner spinner;
+    private YWService ywService = null;
+    private TextView textView;
+    private ImageView imgYwLogo;
+    public final String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "start activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        stats_account = (Button) findViewById(R.id.stats_account);
-
-        stats_account.setOnClickListener(new View.OnClickListener() {
+        spinner = (Spinner) findViewById(R.id.spinner);
+        String[] items = new String[]{ParamsYouthwebStats.ACCOUNT, ParamsYouthwebStats.FORUM, ParamsYouthwebStats.GROUPS};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
+        textView = (TextView) findViewById(R.id.textView_main);
+        imgYwLogo = (ImageView) findViewById(R.id.imageView);
+        imgYwLogo.setImageDrawable(getResources().getDrawable(R.drawable.youthweb_logo));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent mainToStatsAccount = new Intent(MainActivity.this, StatsAccountActivity.class);
-                startActivity(mainToStatsAccount);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String stats = String.valueOf(parent.getItemAtPosition(position));
+                ywService = new YWService(stats, getApplicationContext());
+                Log.i(TAG, "Selected = " + stats);
+                String json = stats;
+                String jsonString;
+                Log.d(TAG, "URL = " + stats);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, e.getMessage() + "\n" + e.toString());
+                }
+                try {
+                    jsonString = ywService.getJson();
+                    Log.d(TAG, "getJson= " + jsonString);
+
+                    JSONObject obj = new JSONObject(jsonString);
+                    json = obj.toString(4);
+                    Log.d(TAG, "JSon pretty= " + json);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage() + "\n" + e.toString());
+                }
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                System.out.println(dateFormat.format(date));
+                textView.setText(dateFormat.format(date) + "\n" + json);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+
+        /*stats_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String json = ywService.getJson();
+                ywService = new YWService("https://youthweb.net/stats/account");
+                // textView.setText(json);
+                try {
+                    JSONObject obj = new JSONObject(json);
+                    json = obj.toString(4);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                textView.setText(json);
+                // JSON.parse(json);
+
+                Toast.makeText(getApplicationContext(), json, Toast.LENGTH_SHORT).show();
+            }
+        });*/
 
     }
 
