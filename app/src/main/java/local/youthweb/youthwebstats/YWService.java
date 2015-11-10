@@ -105,6 +105,8 @@ public class YWService {
                 conn.setReadTimeout(10000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
                 conn.setRequestMethod("GET");
+                conn.setRequestProperty("Content-Type", "application/vnd.api+json");
+                conn.setRequestProperty("Accept", "application/vnd.api+json, application/vnd.api+json; net.youthweb.api.version=0.3");
                 conn.setDoInput(true);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage() + "\n" + e.toString());
